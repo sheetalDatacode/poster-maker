@@ -6,10 +6,17 @@ export const EditorProvider = ({ children }) => {
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [viewingDetail, setViewingDetail] = useState(null);
   const [userData, setUserData] = useState({
-    business_name: 'Dealing India Solutions',
-    phone_number: '+91 9876543210',
-    logo: 'https://ui-avatars.com/api/?name=Dealing+India&background=6366f1&color=fff',
-    gst_number: '27AAAAA0000A1Z5'
+    business_name: 'Sheetal',
+    phone_number: '6261265704', 
+    website: 'www.sheetal.com',
+    email: 'sheetal@example.com',
+    logo: 'https://ui-avatars.com/api/?name=S&background=ef4444&color=fff',
+    userPhoto: null,
+    enabledFields: {
+      phone: true,
+      website: true,
+      email: true
+    }
   });
 
   const injectUserData = (template) => {

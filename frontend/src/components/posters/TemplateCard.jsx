@@ -17,20 +17,12 @@ const TemplateCard = ({ template, onClick, variant = 'regular' }) => {
           className="w-full h-full object-cover" 
           onError={handleImageError}
         />
-        {template.isVideo && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-            <PlayCircle size={24} className="text-white fill-white/20" />
-            <div className="absolute bottom-1.5 right-1.5 p-0.5 rounded-full bg-black/40">
-              <Volume2 size={12} className="text-white" />
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
   return (
-    <div className="bg-white mb-6">
+    <div className="bg-white mb-1">
       <div 
         className="w-full aspect-square overflow-hidden rounded-xl relative bg-[#f8fafc] cursor-pointer" 
         onClick={onClick}
@@ -52,10 +44,14 @@ const TemplateCard = ({ template, onClick, variant = 'regular' }) => {
         )}
       </div>
       
-      <div className="flex justify-around py-3 border-t border-[#f1f5f9] border-b-[4px] border-[#f8fafc]">
+      <div className="flex justify-around py-3 border-t border-[#f1f5f9]">
         <div className="flex flex-col items-center gap-1 flex-1 cursor-pointer active:scale-90 transition-transform" onClick={onClick}>
           <div className="w-8 h-8 flex items-center justify-center text-[#334155]"><Edit2 size={20} /></div>
           <span className="text-[0.75rem] font-bold text-[#64748b]">Edit</span>
+        </div>
+        <div className="flex flex-col items-center gap-1 flex-1 cursor-pointer active:scale-90 transition-transform">
+          <div className="w-8 h-8 flex items-center justify-center text-[#ef4444]"><Video size={20} /></div>
+          <span className="text-[0.75rem] font-bold text-[#64748b]">Video</span>
         </div>
         <div className="flex flex-col items-center gap-1 flex-1 cursor-pointer active:scale-90 transition-transform">
           <div className="w-8 h-8 flex items-center justify-center text-[#334155]"><Download size={20} /></div>

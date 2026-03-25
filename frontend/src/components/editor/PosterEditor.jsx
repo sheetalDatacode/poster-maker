@@ -13,9 +13,19 @@ const PosterEditor = ({ template, onClose }) => {
   // Local state for edits before "Okay"
   const [localUserData, setLocalUserData] = useState({...userData});
 
+  const toggleField = (field) => {
+    setLocalUserData(prev => ({
+      ...prev,
+      enabledFields: {
+        ...prev.enabledFields,
+        [field]: !prev.enabledFields?.[field]
+      }
+    }));
+  };
+
   const handleApplyEdits = () => {
-    setUserData(localUserData);
-    onClose(); // Hide modal
+    setUserData({ ...localUserData, business_name: localUserData.business_name || 'Sheetal' });
+    onClose();
   };
 
   const updateLocalField = (field, value) => {
@@ -30,134 +40,201 @@ const PosterEditor = ({ template, onClose }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div 
-        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[24px] flex flex-col h-[95vh]"
+        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[24px] flex flex-col h-[95vh] overflow-hidden"
         initial={{ y: '101%' }}
         animate={{ y: 0 }}
         exit={{ y: '101%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
-        <div className="p-3.5 px-4 flex justify-between items-center border-b border-[#f1f5f9]">
-          <button className="bg-transparent font-bold text-[#64748b] border-none active:scale-95 transition-transform" onClick={onClose}><X size={24} /></button>
-          <div className="text-[1.1rem] font-bold text-[#1e293b]">Edit Poster</div>
-          <button className="bg-transparent font-bold text-error border-none active:scale-95 transition-transform" onClick={handleApplyEdits}><Check size={24} /></button>
+        {/* Header */}
+        <div className="p-4 px-5 flex justify-between items-center bg-white border-b border-gray-100">
+          <X className="cursor-pointer text-gray-500" onClick={onClose} />
+          <h2 className="text-lg font-bold text-gray-800">Edit Poster</h2>
+          <Check className="cursor-pointer text-red-500 font-bold" onClick={handleApplyEdits} />
         </div>
 
-        <div className="flex border-b border-[#f1f5f9]">
-           <button 
-             className={`flex-1 p-3.5 bg-transparent text-[1rem] font-bold flex items-center justify-center gap-2 relative border-none ${activeTab === 'text' ? 'text-error' : 'text-[#94a3b8]'}`}
-             onClick={() => setActiveTab('text')}
-           >
-             <Type size={18} /> Text
-             {activeTab === 'text' && <div className="absolute bottom-0 left-[15%] right-[15%] h-[3px] bg-error rounded-t-sm" />}
-           </button>
-           <button 
-             className={`flex-1 p-3.5 bg-transparent text-[1rem] font-bold flex items-center justify-center gap-2 relative border-none ${activeTab === 'branding' ? 'text-error' : 'text-[#94a3b8]'}`}
-             onClick={() => setActiveTab('branding')}
-           >
-             <div className="relative">
-               <ImageIcon size={18} />
-               <Plus size={8} className="absolute -top-0.5 -right-1 font-black" />
-             </div>
-             Photo / Logo
-             {activeTab === 'branding' && <div className="absolute bottom-0 left-[15%] right-[15%] h-[3px] bg-error rounded-t-sm" />}
-           </button>
+        {/* Custom Tabs */}
+        <div className="flex border-b border-gray-100 relative">
+          <button 
+            className={`flex-1 py-4 text-[1rem] font-bold flex items-center justify-center gap-2 border-none bg-transparent transition-colors ${activeTab === 'text' ? 'text-red-500' : 'text-gray-400'}`}
+            onClick={() => setActiveTab('text')}
+          >
+            <Type size={20} /> Text
+            {activeTab === 'text' && <div className="absolute bottom-0 left-0 w-1/2 h-[3px] bg-red-500 rounded-t-full" />}
+          </button>
+          <button 
+            className={`flex-1 py-4 text-[1rem] font-bold flex items-center justify-center gap-2 border-none bg-transparent transition-colors ${activeTab === 'branding' ? 'text-red-500' : 'text-gray-400'}`}
+            onClick={() => setActiveTab('branding')}
+          >
+            <ImageIcon size={20} /> Photo / Logo
+            {activeTab === 'branding' && <div className="absolute bottom-0 right-0 w-1/2 h-[3px] bg-red-500 rounded-t-full" />}
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 px-4">
+        <div className="flex-1 overflow-y-auto bg-white">
           {activeTab === 'text' && (
-            <div className="flex flex-col gap-4">
-              <div className="mb-3">
-                <label className="block text-[0.85rem] font-bold text-[#64748b] mb-1.5">Business Name</label>
-                <input 
-                  type="text" 
-                  className="w-full p-3.5 border-1.5 border-[#f1f5f9] rounded-xl text-[1rem] bg-[#f8fafc] outline-none focus:border-primary/30"
-                  value={localUserData.business_name || ''} 
-                  onChange={(e) => updateLocalField('business_name', e.target.value)}
-                />
+            <div className="p-5 flex flex-col gap-6">
+              {/* Category Pills */}
+              <div className="flex gap-4">
+                {['Personal', 'Misc', 'Business'].map(cat => (
+                  <button 
+                    key={cat} 
+                    className={`px-6 py-2 rounded-full text-sm font-bold border-none transition-colors ${cat === 'Personal' ? 'bg-[#1e1e1e] text-white' : 'bg-gray-100 text-[#475569]'}`}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
-              <div className="mb-3">
-                <label className="block text-[0.85rem] font-bold text-[#64748b] mb-1.5">Phone Number</label>
-                <input 
-                  type="text" 
-                  className="w-full p-3.5 border-1.5 border-[#f1f5f9] rounded-xl text-[1rem] bg-[#f8fafc] outline-none focus:border-primary/30"
-                  value={localUserData.phone_number || ''} 
-                  onChange={(e) => updateLocalField('phone_number', e.target.value)}
-                />
+
+              {/* Add Extra Text Block */}
+              <div className="bg-[#eff6ff] border border-[#bfdbfe] rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-white rounded-xl border border-[#dbeafe] flex items-center justify-center text-[#3b82f6]">
+                    <Type size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-[0.95rem] font-bold text-[#1e3a8a]">Add Extra Text</h3>
+                    <p className="text-[0.7rem] text-[#60a5fa] font-medium">You can add up to 5 texts</p>
+                  </div>
+                </div>
+                <button className="bg-[#3b82f6] text-white px-5 py-2 rounded-lg text-sm font-bold shadow-md active:scale-95 transition-transform border-none">
+                  Add Text
+                </button>
               </div>
-              <div className="mb-3">
-                <label className="block text-[0.85rem] font-bold text-[#64748b] mb-1.5">Website</label>
-                <input 
-                  type="text" 
-                  className="w-full p-3.5 border-1.5 border-[#f1f5f9] rounded-xl text-[1rem] bg-[#f8fafc] outline-none focus:border-primary/30"
-                  value={localUserData.website || ''} 
-                  onChange={(e) => updateLocalField('website', e.target.value)}
-                />
+
+              {/* Form Fields */}
+              <div className="space-y-6">
+                <div className="relative">
+                  <div className="flex justify-between items-center mb-1.5 px-1">
+                    <label className="text-[0.85rem] font-bold text-[#475569]">Mobile</label>
+                    <span className="text-[0.65rem] font-bold text-[#94a3b8]">{localUserData.phone_number?.length || 0} / 500</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="text" 
+                      className="flex-1 bg-gray-50/50 border border-gray-100 rounded-xl p-3.5 px-4 outline-none focus:border-red-200 focus:bg-white text-[1rem] font-medium text-gray-800 shadow-sm"
+                      value={localUserData.phone_number || ''}
+                      onChange={(e) => updateLocalField('phone_number', e.target.value)}
+                    />
+                    <div 
+                      className={`w-6 h-6 rounded flex items-center justify-center cursor-pointer transition-all ${localUserData.enabledFields?.phone ? 'bg-blue-500' : 'bg-white border-2 border-gray-200'}`}
+                      onClick={() => toggleField('phone')}
+                    >
+                      {localUserData.enabledFields?.phone && <Check size={14} className="text-white" />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="flex justify-between items-center mb-1.5 px-1">
+                    <label className="text-[0.85rem] font-bold text-[#475569]">Website</label>
+                    <span className="text-[0.65rem] font-bold text-[#94a3b8]">{localUserData.website?.length || 0} / 500</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="text" 
+                      placeholder="Your Website"
+                      className="flex-1 bg-gray-50/50 border border-gray-100 rounded-xl p-3.5 px-4 outline-none focus:border-red-200 focus:bg-white text-[1rem] font-medium text-gray-800 shadow-sm"
+                      value={localUserData.website || ''}
+                      onChange={(e) => updateLocalField('website', e.target.value)}
+                    />
+                    <div 
+                      className={`w-6 h-6 rounded flex items-center justify-center cursor-pointer transition-all ${localUserData.enabledFields?.website ? 'bg-blue-500' : 'bg-white border-2 border-gray-200'}`}
+                      onClick={() => toggleField('website')}
+                    >
+                      {localUserData.enabledFields?.website && <Check size={14} className="text-white" />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <div className="flex justify-between items-center mb-1.5 px-1">
+                    <label className="text-[0.85rem] font-bold text-[#475569]">Email</label>
+                    <span className="text-[0.65rem] font-bold text-[#94a3b8]">{localUserData.email?.length || 0} / 500</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input 
+                      type="text" 
+                      placeholder="Your Email"
+                      className="flex-1 bg-gray-50/50 border border-gray-100 rounded-xl p-3.5 px-4 outline-none focus:border-red-200 focus:bg-white text-[1rem] font-medium text-gray-800 shadow-sm"
+                      value={localUserData.email || ''}
+                      onChange={(e) => updateLocalField('email', e.target.value)}
+                    />
+                    <div 
+                      className={`w-6 h-6 rounded flex items-center justify-center cursor-pointer transition-all ${localUserData.enabledFields?.email ? 'bg-blue-500' : 'bg-white border-2 border-gray-200'}`}
+                      onClick={() => toggleField('email')}
+                    >
+                      {localUserData.enabledFields?.email && <Check size={14} className="text-white" />}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {activeTab === 'branding' && (
-            <div className="flex flex-col gap-4">
-              
-              <div className="bg-[#fff9f2] border-1.5 border-dashed border-[#ffd8a8] rounded-[14px] p-4 flex items-center gap-4">
-                <div className="w-[52px] h-[52px] bg-white rounded-xl border border-[#f1f5f9] flex items-center justify-center shadow-sm"><ImageIcon size={24} className="text-[#f59e0b]" /></div>
-                <div className="flex-1">
-                   <strong className="block text-[0.9rem] text-[#1e293b]">Add Extra Photos</strong>
-                   <span className="text-[0.75rem] text-[#94a3b8]">You can add up to 5 photos</span>
+            <div className="p-5 flex flex-col gap-6">
+               <div className="bg-[#fffbeb] border border-[#fde68a] rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-white rounded-xl border border-[#fef3c7] flex items-center justify-center text-[#f59e0b]">
+                    <ImageIcon size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-[0.95rem] font-bold text-[#92400e]">Add Extra Photos</h3>
+                    <p className="text-[0.7rem] text-[#f59e0b] font-medium">You can add up to 5 photos</p>
+                  </div>
                 </div>
-                <button className="bg-[#f59e0b] text-white px-4 py-2 rounded-full text-[0.85rem] font-bold border-none active:scale-95 transition-transform">Add Photo</button>
-              </div>
-
-              <div className="flex items-center gap-4 py-1">
-                <div className="w-[52px] h-[52px] bg-[#f1f5f9] rounded-full border border-[#f1f5f9] flex items-center justify-center shadow-sm">
-                   <div className="w-10 h-10 text-[#64748b] relative flex items-center justify-center">
-                     <User size={40} />
-                     <div className="absolute -bottom-1 w-full text-center text-[5px] font-black bg-white py-0.5">YOUR PHOTO HERE</div>
-                   </div>
-                </div>
-                <div className="flex-1">
-                   <strong className="block text-[0.9rem] text-[#1e293b]">Profile Photo</strong>
-                   <span className="text-[0.75rem] text-[#94a3b8]">Place it anywhere on the screen</span>
-                </div>
-                <button className="bg-[#facc15] text-white px-4 py-2 rounded-full text-[0.85rem] font-bold border-none active:scale-95 transition-transform">
-                   {localUserData.logo ? 'Change' : 'Add'}
+                <button className="bg-[#f59e0b] text-white px-5 py-2 rounded-lg text-sm font-bold shadow-md active:scale-95 transition-transform border-none">
+                  Add Photo
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 py-1">
-                <div className="w-[52px] h-[52px] bg-white rounded-full border border-dashed border-[#f1f5f9] flex items-center justify-center shadow-sm">
-                   <Star size={24} className="text-[#ef4444]" fill="#fee2e2" />
-                </div>
-                <div className="flex-1">
-                   <strong className="block text-[0.9rem] text-[#1e293b]">Logo</strong>
-                   <span className="text-[0.75rem] text-[#94a3b8]">Place it anywhere on the screen</span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                   <button className="bg-[#facc15] text-white px-4 py-2 rounded-full text-[0.85rem] font-bold border-none active:scale-95 transition-transform">
-                     {localUserData.logo ? 'Change' : 'Add'}
-                   </button>
-                   <input type="checkbox" checked={!!localUserData.logo} className="w-5 h-5 accent-error" readOnly />
-                </div>
+              <div className="flex items-center justify-between py-2 border-b border-gray-50">
+                 <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center relative overflow-hidden">
+                       <User size={32} className="text-gray-400" />
+                       <div className="absolute bottom-0 w-full bg-white/90 text-[5px] font-black text-center py-0.5">YOUR PHOTO HERE</div>
+                    </div>
+                    <div>
+                       <strong className="block text-[0.95rem] text-gray-800">Profile Photo</strong>
+                       <p className="text-[0.7rem] text-gray-400 font-medium">Place it anywhere on the screen</p>
+                    </div>
+                 </div>
+                 <div className="flex items-center gap-3">
+                    <button className="bg-[#fbbf24] text-white px-4 py-1.5 rounded-full text-xs font-bold border-none active:scale-95 transition-transform">Change</button>
+                    <div className="w-5 h-5 rounded flex items-center justify-center bg-blue-500"><Check size={12} className="text-white" /></div>
+                 </div>
               </div>
 
-              <div className="flex items-center gap-4 py-1">
-                 <div className="w-[52px] h-[52px] bg-white rounded-full border border-dashed border-[#f1f5f9] flex items-center justify-center shadow-sm">
-                    <Smile size={24} className="text-[#f59e0b]" fill="#fef3c7" />
+              <div className="flex items-center justify-between py-2">
+                 <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-white border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
+                       <Star size={32} className="text-red-400" />
+                    </div>
+                    <div>
+                       <strong className="block text-[0.95rem] text-gray-800">Logo</strong>
+                       <p className="text-[0.7rem] text-gray-400 font-medium">Place it anywhere on the screen</p>
+                    </div>
                  </div>
-                 <div className="flex-1">
-                   <strong className="block text-[0.9rem] text-[#1e293b]">Stickers</strong>
-                   <span className="text-[0.75rem] text-[#94a3b8]">Place it anywhere on the screen</span>
+                 <div className="flex items-center gap-3">
+                    <button className="bg-[#fbbf24] text-white px-4 py-1.5 rounded-full text-xs font-bold border-none active:scale-95 transition-transform">Add</button>
+                    <div className="w-5 h-5 rounded border-2 border-gray-200"></div>
                  </div>
-                 <button className="bg-[#facc15] text-white px-4 py-2 rounded-full text-[0.85rem] font-bold border-none active:scale-95 transition-transform">Add</button>
               </div>
-
             </div>
           )}
         </div>
-        
-        <div className="p-4 pb-8">
-           <button className="w-full p-4 bg-error text-white rounded-xl font-bold text-[1rem] border-none shadow-md active:scale-[0.98] transition-transform" onClick={handleApplyEdits}>
-             Open to Edit
+
+        {/* Footer Actions */}
+        <div className="p-4 px-6 border-t border-gray-100 bg-white flex items-center justify-between gap-6 pb-10">
+           <button className="bg-transparent text-red-500 font-bold text-lg active:scale-95 transition-transform border-none" onClick={onClose}>
+             Cancel
+           </button>
+           <button 
+            className="flex-1 max-w-[200px] bg-red-500 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-red-100 active:scale-[0.98] transition-all border-none"
+            onClick={handleApplyEdits}
+           >
+             Save
            </button>
         </div>
       </motion.div>

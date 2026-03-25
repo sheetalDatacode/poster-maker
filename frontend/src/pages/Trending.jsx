@@ -12,68 +12,67 @@ const Trending = () => {
   const [activeCategory, setActiveCategory] = useState('Trending');
   
   const categoryChips = [
-    'My Designs', 'Trending', 'Chaitra Navratri', 'Ramzan', 
-    'Religious', 'Hindu Nav Varsh', 'View More'
+    'My Designs', 'Trending', 'Chaitra Navratri', 'Ramnavami', 
+    'Religious', 'Quotes'
   ];
 
   const sections = [
-    { title: "Today's Special - 17 Mar (13)", items: TEMPLATES.slice(0, 6) },
-    { title: "Business Cards (45)", items: TEMPLATES.filter(t => t.category === 'Business Card') },
-    { title: "Good Night - शुभ रात्रि (24)", items: TEMPLATES.filter(t => t.category === 'Good Night') },
-    { title: "Suvichar & Motivational (427)", items: TEMPLATES.filter(t => t.category === 'Motivational Quotes') },
-    { title: "Whatsapp Status - शुभ मंगलवार (42)", items: TEMPLATES.filter(t => t.category === 'Good Morning').slice(0, 6) },
-    { title: "Masik Shivratri (24)", items: TEMPLATES.slice(5, 11) }
+    { title: "Today's Special - 25 Mar (11)", items: TEMPLATES.slice(0, 8) },
+    { title: "माँ कालरात्रि - 7th Chaitra Navratri (...", items: TEMPLATES.filter(t => t.category === 'Chaitra Navratri' || t.category === 'Religious').slice(0, 8) },
+    { title: "Business Cards (45)", items: TEMPLATES.filter(t => t.category === 'Business Promotion').slice(0, 8) },
+    { title: "Suvichar & Motivational (427)", items: TEMPLATES.filter(t => t.category === 'Quotes' || t.trending).slice(0, 8) }
   ];
 
   return (
-    <div className="bg-bg">
-      {/* Sticky Header (Search + Categories) */}
-      <div className="sticky top-0 z-[10] shadow-sm">
-        {/* Search Bar */}
-        <div className="p-3 px-4 bg-white">
-          <SearchBar 
-            placeholder="Search Posters" 
-            value=""
-            onChange={(val) => console.log('Search:', val)}
-          />
+    <div className="bg-[#f8fafc] pb-20">
+      {/* Search Bar Area */}
+      <div className="bg-white p-3 px-4 pt-1 border-b border-[#f1f5f9]">
+        <div className="bg-[#f1f5f9] -mx-4 px-4 py-2 mb-3 text-center text-[0.8rem] font-bold text-[#b45309] border-b border-[#e2e8f0]">
+           🙏 Support us & give 5* rating - click here! 🙏
         </div>
+        <SearchBar 
+          placeholder="Search Posters" 
+          value=""
+          onChange={(val) => console.log('Search:', val)}
+        />
+      </div>
 
-        {/* Category Chips */}
-        <div className="flex gap-2 px-4 py-3 overflow-x-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-b border-border">
+      {/* 3-Column Category Grid */}
+      <div className="bg-white px-4 py-4 border-b border-[#f1f5f9]">
+        <div className="grid grid-cols-3 gap-2 mb-3">
            {categoryChips.map((cat, idx) => (
              <button 
                key={idx} 
-               className={`px-3.5 py-1.5 rounded-full border whitespace-nowrap text-[0.8rem] font-bold transition-colors ${activeCategory === cat ? 'bg-[#1e1e1e] text-white border-[#1e1e1e]' : 'bg-white text-[#475569] border-[#e2e8f0]'}`}
+               className={`py-2 px-1 rounded-full border text-[0.7rem] font-black transition-all shadow-sm active:scale-95 ${activeCategory === cat ? 'bg-[#1e1e1e] text-white border-[#1e1e1e]' : 'bg-white text-[#475569] border-[#e2e8f0]'}`}
                onClick={() => setActiveCategory(cat)}
              >
-               {cat === 'Hindu Nav Varsh' ? <>{cat} 🚩</> : cat}
+               {cat}
              </button>
            ))}
         </div>
+        <button className="w-[100px] py-1.5 rounded-full border border-[#e2e8f0] bg-white text-[#475569] text-[0.7rem] font-black shadow-sm active:scale-95 transition-transform">
+           View More
+        </button>
       </div>
 
-      {/* AI Profile Banner */}
-      <div className="m-4 bg-[#4d7c0f] rounded-xl p-4 flex justify-between items-center text-white relative overflow-hidden">
-        <div className="relative z-10">
-          <h2 className="text-[0.95rem] font-bold mb-3 max-w-[160px] leading-relaxed">Get studio-quality AI profile photo</h2>
-          <button className="bg-white text-[#4d7c0f] px-3 py-1.5 rounded-full text-[0.75rem] font-extrabold flex items-center gap-1 shadow-sm active:scale-95 transition-transform">
-             Make Profile Photo <ArrowRight size={14} />
+      {/* AI Profile Banner - Reference style */}
+      <div className="m-4 mx-3 bg-[#4d7c0f] rounded-xl p-4 flex justify-between items-center text-white relative shadow-md">
+        <div className="flex-1">
+          <button className="bg-white text-[#4d7c0f] px-4 py-2 rounded-lg text-[0.8rem] font-black flex items-center gap-1.5 shadow-lg active:scale-95 transition-transform border-none">
+             Make Profile Photo ↗
           </button>
         </div>
-        <div className="flex items-center relative">
-          <div className="flex -space-x-3 mr-2">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop" className="w-[32px] h-[42px] object-cover border-[1.5px] border-white rounded-sm shadow-sm" alt="AI 1" />
-            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop" className="w-[32px] h-[42px] object-cover border-[1.5px] border-white rounded-sm shadow-sm" alt="AI 2" />
-            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=100&auto=format&fit=crop" className="w-[32px] h-[42px] object-cover border-[1.5px] border-white rounded-sm shadow-sm" alt="AI 3" />
-          </div>
-          <button className="absolute -top-6 -right-2 bg-black/20 text-white w-5 h-5 rounded-full flex items-center justify-center text-sm border-none leading-none">×</button>
+        <div className="flex gap-2 relative">
+           <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100&h=120&fit=crop" className="w-[45px] h-[55px] object-cover rounded-md border-2 border-white/50 bg-gray-200" alt="p1" />
+           <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=100&h=120&fit=crop" className="w-[45px] h-[55px] object-cover rounded-md border-2 border-white/50 bg-gray-200" alt="p2" />
+           <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&h=120&fit=crop" className="w-[45px] h-[55px] object-cover rounded-md border-2 border-white/50 bg-gray-200" alt="p3" />
         </div>
       </div>
 
       {/* Feed Sections */}
       <div className="flex flex-col gap-2">
         {sections.map((section, idx) => (
-          <div key={idx} className="bg-white py-4">
+          <div key={idx} className="bg-white py-1 mb-1 shadow-sm">
             <SectionHeader 
                title={section.title} 
                showViewAll={true} 

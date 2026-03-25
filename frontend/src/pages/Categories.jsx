@@ -32,7 +32,7 @@ const Categories = () => {
 
       <div className="pt-2">
         {businessSections.map((section, idx) => (
-          <div key={idx} className="bg-white py-4 mb-2">
+          <div key={idx} className="bg-white py-1 mb-1 shadow-sm">
             <SectionHeader 
                title={`${section.title} (${section.count})`} 
                showViewAll={true} 
