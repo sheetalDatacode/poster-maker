@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, ChevronRight, Video } from 'lucide-react';
+import { Heart, ChevronRight, Video, User } from 'lucide-react';
 import SectionHeader from '../components/common/SectionHeader';
 import HorizontalScrollList from '../components/common/HorizontalScrollList';
 import TemplateCard from '../components/posters/TemplateCard';
@@ -9,6 +9,7 @@ import { TEMPLATES, CATEGORIES } from '../utils/mockData';
 import { useEditor } from '../context/EditorContext';
 
 const ForYou = () => {
+  const { openDetail, userData } = useEditor();
   const [activeCategory, setActiveCategory] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
   const [visibleSections, setVisibleSections] = useState(5);
@@ -33,8 +34,8 @@ const ForYou = () => {
   const renderPOTDCard = (tpl, idx) => {
     if (!tpl) return null;
     return (
-      <div className="potd-card-wrapper mb-8 lg:mb-0 lg:max-w-full lg:m-0" key={tpl.id}>
-        <section className="bg-white py-4 mb-2 lg:p-0 lg:m-0 lg:bg-transparent">
+      <div className="potd-card-wrapper mb-2 lg:mb-0 lg:max-w-full lg:m-0" key={tpl.id}>
+        <section className="bg-white py-2 mb-1 lg:p-0 lg:m-0 lg:bg-transparent">
           <SectionHeader 
             title="Poster of the Day" 
             rightContent={
@@ -44,8 +45,44 @@ const ForYou = () => {
               </div>
             } 
           />
-          <div className="px-2 lg:p-0">
+          <div className="px-2 lg:p-0 relative group">
              <TemplateCard template={tpl} variant="regular" onClick={() => openDetail(tpl)} />
+             
+             {/* Dynamic Branding Feedback in Feed (Matches Detail View Ref Image 3) */}
+             <div className="absolute bottom-2 left-2 right-2 pointer-events-none z-10">
+                <div className="bg-white/95 backdrop-blur-sm p-1.5 px-2.5 rounded-lg flex items-center justify-between border border-gray-100/50 shadow-lg">
+                   <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full border border-gray-100 flex items-center justify-center p-0.5 bg-white shadow-sm overflow-hidden">
+                         <img src={userData.logo} className="w-full h-full object-contain" alt="logo" />
+                      </div>
+                      <div className="min-w-0">
+                         <div className="text-[0.7rem] font-black text-gray-900 leading-tight truncate px-0.5">{userData.business_name}</div>
+                         <div className="text-[0.55rem] font-bold text-gray-500">{userData.phone_number}</div>
+                      </div>
+                   </div>
+                   {/* 'Click on Edit' Pill integrated into bar */}
+                   <div className="bg-gray-800/80 px-1.5 py-0.5 rounded-full text-[0.45rem] font-black text-white border border-white/20 whitespace-nowrap hidden sm:block">
+                      Click on <span className="text-red-400">Edit Poster</span>
+                   </div>
+                </div>
+             </div>
+
+             {/* Cutout Overlay (Lowered to sit better) */}
+             <div className="absolute bottom-14 right-4 pointer-events-none flex flex-col items-center gap-0.5 z-20">
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                   {userData.userPhoto ? (
+                     <img src={userData.userPhoto} className="w-full h-full object-cover" alt="u" />
+                   ) : (
+                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-100">
+                        <User size={20} />
+                        <span className="text-[4px] font-black text-center px-1">YOUR PHOTO</span>
+                     </div>
+                   )}
+                </div>
+                <div className="bg-gray-800/90 backdrop-blur-md px-2 py-0.5 rounded-full text-[0.5rem] font-black text-white border border-white/20 whitespace-nowrap shadow-md">
+                   Click on <span className="text-red-400">Edit Poster</span>
+                </div>
+             </div>
           </div>
         </section>
         <div className="h-2 bg-[#f1f5f9] lg:hidden"></div>
@@ -153,7 +190,7 @@ const ForYou = () => {
         ) : (
           <>
             {/* 1. Today's Special */}
-            <section className="bg-white py-4 mb-2">
+            <section className="bg-white py-2 mb-1">
               <SectionHeader title="Today's Special" showViewAll={true} />
           <HorizontalScrollList>
             {TEMPLATES.slice(0, 8).map(tpl => (
@@ -178,7 +215,7 @@ const ForYou = () => {
         </div>
 
         {/* 3. CATEGORIES GRID */}
-        <section className="bg-white py-4 mb-2">
+        <section className="bg-white py-2 mb-1">
           <SectionHeader title="Categories" showViewAll={true} />
           <div className="grid grid-cols-4 gap-y-6 gap-x-2 px-2 pb-2">
             {CATEGORIES.slice(0, 8).map(cat => (
@@ -198,7 +235,7 @@ const ForYou = () => {
         </div>
 
         {/* 4. Daily Whatsapp Status */}
-        <section className="bg-white py-4 mb-2">
+        <section className="bg-white py-2 mb-1">
           <SectionHeader title="Daily Whatsapp status" showViewAll={true} />
           <HorizontalScrollList>
             {whatsappPosters.length > 0 ? (
@@ -222,7 +259,7 @@ const ForYou = () => {
         </div>
 
         {/* 5. Business Boost Posters */}
-        <section className="bg-white py-4 mb-2">
+        <section className="bg-white py-2 mb-1">
           <SectionHeader title="Business Boost Posters" showViewAll={true} />
           <HorizontalScrollList>
             {businessPosters.map(tpl => (
@@ -237,7 +274,7 @@ const ForYou = () => {
         </section>
 
         {/* 6. Daily Greetings */}
-        <section className="bg-white py-4 mb-2">
+        <section className="bg-white py-2 mb-1">
           <SectionHeader title="Daily Greetings" showViewAll={true} />
           <HorizontalScrollList>
             {greetingPosters.map(tpl => (
